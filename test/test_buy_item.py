@@ -11,9 +11,9 @@ def app(request):
 
 
 def test_buy_item(app):
-    app.login(username="technodeath@gmail.com", password="qwe123")
+    app.session.login(username="technodeath@gmail.com", password="qwe123")
     app.find_item_on_site(item="Blouse")
     app.click_on_item(item="Blouse")
     app.click_add_to_cart()
     app.click_close_popup()
-    app.logout()
+    app.session.logout()

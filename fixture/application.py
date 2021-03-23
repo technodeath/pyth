@@ -1,4 +1,5 @@
 from selenium import webdriver
+from fixture.session import SessionHelper
 
 
 class Application:
@@ -6,10 +7,7 @@ class Application:
     def __init__(self):
         self.wd = webdriver.Chrome()
         self.wd.implicitly_wait(30)
-
-    def logout(self):
-        wd = self.wd
-        wd.find_element_by_link_text("Sign out").click()
+        self.session = SessionHelper(self)
 
     def find_item_on_site(self, item):
         wd = self.wd
@@ -27,17 +25,6 @@ class Application:
     def click_close_popup(self):
         wd = self.wd
         wd.find_element_by_css_selector("span.cross").click()
-
-    def login(self, username, password):
-        wd = self.wd
-        self.open_home_page()
-        wd.find_element_by_link_text("Sign in").click()
-        wd.find_element_by_id("email").click()
-        wd.find_element_by_id("email").clear()
-        wd.find_element_by_id("email").send_keys(username)
-        wd.find_element_by_id("passwd").clear()
-        wd.find_element_by_id("passwd").send_keys(password)
-        wd.find_element_by_xpath("//button[@id='SubmitLogin']/span").click()
 
     def open_home_page(self):
         wd = self.wd
