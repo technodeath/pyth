@@ -7,50 +7,45 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 
+
 class TestLogin(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.driver.implicitly_wait(30)
-        self.base_url = "https://www.google.com/"
-        self.verificationErrors = []
-        self.accept_next_alert = True
+        self.wd = webdriver.Chrome()
+        self.wd.implicitly_wait(30)
     
     def test_login(self):
-        driver = self.driver
-        driver.get("http://automationpractice.com/index.php")
-        driver.find_element_by_link_text("Sign in").click()
-        driver.find_element_by_id("email").click()
-        driver.find_element_by_id("email").clear()
-        driver.find_element_by_id("email").send_keys("technodeath@gmail.com")
-        driver.find_element_by_id("passwd").clear()
-        driver.find_element_by_id("passwd").send_keys("qwe123")
-        driver.find_element_by_xpath("//button[@id='SubmitLogin']/span").click()
-        driver.find_element_by_link_text("Sign out").click()
-    
+        wd = self.wd
+        self.open_home_page(wd)
+        self.login(wd)
+        self.logout(wd)
+
+    def logout(self, wd):
+        wd.find_element_by_link_text("Sign out").click()
+
+    def login(self, wd):
+        wd.find_element_by_link_text("Sign in").click()
+        wd.find_element_by_id("email").click()
+        wd.find_element_by_id("email").clear()
+        wd.find_element_by_id("email").send_keys("technodeath@gmail.com")
+        wd.find_element_by_id("passwd").clear()
+        wd.find_element_by_id("passwd").send_keys("qwe123")
+        wd.find_element_by_xpath("//button[@id='SubmitLogin']/span").click()
+
+    def open_home_page(self, wd):
+        wd.get("http://automationpractice.com/index.php")
+
     def is_element_present(self, how, what):
-        try: self.driver.find_element(by=how, value=what)
+        try: self.wd.find_element(by=how, value=what)
         except NoSuchElementException as e: return False
         return True
     
     def is_alert_present(self):
-        try: self.driver.switch_to_alert()
+        try: self.wd.switch_to_alert()
         except NoAlertPresentException as e: return False
         return True
     
-    def close_alert_and_get_its_text(self):
-        try:
-            alert = self.driver.switch_to_alert()
-            alert_text = alert.text
-            if self.accept_next_alert:
-                alert.accept()
-            else:
-                alert.dismiss()
-            return alert_text
-        finally: self.accept_next_alert = True
-    
     def tearDown(self):
-        self.driver.quit()
-        self.assertEqual([], self.verificationErrors)
+        self.wd.quit()
 
 if __name__ == "__main__":
     unittest.main()
